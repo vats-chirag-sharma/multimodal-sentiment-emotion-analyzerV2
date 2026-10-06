@@ -24,6 +24,19 @@ main{max-width:1440px;margin:auto;padding:32px clamp(16px,4vw,56px) 60px}.page{d
 .contentgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.contentgrid .card h2{margin:0 0 10px;font-size:18px}.contentgrid p,.contentgrid li{color:var(--muted);font-size:14px}.contentgrid ul{padding-left:19px}.tag{display:inline-block;font-size:11px;border:1px solid #ffffff17;color:#c9d3eb;padding:5px 9px;border-radius:99px;margin:4px 4px 0 0}
 footer{border-top:1px solid #ffffff10;color:#7683a4;padding:22px clamp(18px,5vw,72px);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#202a43;border:1px solid #ffffff25;padding:12px 17px;border-radius:12px;z-index:30;display:none;max-width:90vw;font-size:13px}.toast.show{display:block}
+
+.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
+.analytics-wide{grid-column:1/-1}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{padding:16px;border-radius:15px;background:#0c1222;border:1px solid #ffffff10}.kpi .label{color:#9eacd0;font-size:11px}.kpi .value{font-size:24px;font-weight:850;margin-top:7px;letter-spacing:-.6px}.kpi .sub{color:#7382a5;font-size:10px;margin-top:4px}
+.source-list{display:grid;gap:11px;margin-top:12px}.source-row{display:grid;grid-template-columns:145px 1fr 64px;gap:10px;align-items:center;font-size:12px}.source-name{color:#cbd5ef;font-weight:650}.source-track{height:9px;background:#252e48;border-radius:99px;overflow:hidden}.source-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#9875ff,#58a6ff)}.source-num{text-align:right;color:#b8c5df;font-variant-numeric:tabular-nums}
+.metric-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}.metric-box{padding:16px;border-radius:15px;background:#0c1222;border:1px solid #ffffff10}.metric-box h3{margin:0;font-size:13px;color:#e7edff}.metric-box .big{font-size:31px;font-weight:900;margin:8px 0 4px}.metric-box .small{font-size:11px;color:#95a3c3}.mini-bar{height:9px;background:#252e48;border-radius:99px;overflow:hidden;margin-top:10px}.mini-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#57d9ad,#58a6ff)}
+.report-table{width:100%;border-collapse:collapse;margin-top:8px}.report-table th,.report-table td{padding:9px 8px;border-bottom:1px solid #ffffff0c;font-size:12px}.report-table th{color:#8290af;font-weight:650}.report-table td{color:#dbe3f7}.report-table .class-name{font-weight:800}
+.cm-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}.cm{display:grid;grid-template-columns:90px repeat(3,1fr);border:1px solid #ffffff10;border-radius:14px;overflow:hidden;background:#0c1222}.cm div{padding:10px 7px;border-right:1px solid #ffffff08;border-bottom:1px solid #ffffff08;text-align:center;font-size:11px}.cm .head{color:#9eacd0;font-weight:700;background:#11182b}.cm .diag{background:#153126;color:#7df0c5;font-weight:850}.cm .off{color:#d3dbee}.cm-title{font-size:12px;font-weight:800;color:#dfe7fb;margin:0 0 8px}.legend-note{color:#7f8cad;font-size:10px;margin-top:8px;line-height:1.45}
+.architecture{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch;margin-top:10px}.arch-step{padding:14px 11px;border:1px solid #ffffff10;background:#0c1222;border-radius:13px;text-align:center}.arch-step strong{display:block;font-size:12px;color:#e3eaff}.arch-step span{display:block;margin-top:5px;color:#8492b2;font-size:10px}.bar-chart{display:grid;gap:10px;margin-top:12px}.bar-line{display:grid;grid-template-columns:115px 1fr 56px;gap:10px;align-items:center;font-size:11px}.bar-line .name{color:#c6d0e6;font-weight:650}.bar-line .track{height:12px;background:#252e48;border-radius:99px;overflow:hidden}.bar-line .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#9875ff,#58a6ff)}.bar-line .pct{text-align:right;color:#b8c5df}
+@media(max-width:1000px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.analytics-grid{grid-template-columns:1fr}.analytics-wide{grid-column:auto}.cm-wrap{grid-template-columns:1fr}.architecture{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.kpi-grid{grid-template-columns:1fr 1fr}.kpi-grid .kpi:first-child{grid-column:1/-1}.source-row{grid-template-columns:95px 1fr 55px}.bar-line{grid-template-columns:86px 1fr 48px}.metric-compare{grid-template-columns:1fr}}
+
 @media(max-width:1000px){.features{grid-template-columns:repeat(2,1fr)}.livegrid{grid-template-columns:1fr}.bottomgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){header{height:auto;min-height:68px;padding:12px 16px;align-items:flex-start;gap:10px;flex-direction:column}nav{width:100%;overflow:auto}nav button{white-space:nowrap;padding:8px 11px;font-size:12px}.hero{padding:34px 0 24px}.hero h1{letter-spacing:-1.6px}.hero p{font-size:16px}.features{grid-template-columns:1fr 1fr}.feature{padding:15px}.pagehead{align-items:flex-start;flex-direction:column}.contentgrid{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:21px}.prob-row{grid-template-columns:78px 1fr 42px}.card{padding:15px}main{padding-top:22px}}
 
@@ -118,7 +131,7 @@ footer{border-top:1px solid #ffffff10;color:#7683a4;padding:22px clamp(18px,5vw,
 <header>
   <a class="brand" href="#" data-page="home"><span class="logo">E</span> EmotionAI</a>
   <nav aria-label="Main navigation">
-    <button class="active" data-page="home">Home</button><button data-page="live">Face Analysis</button><button data-page="text">Text Intelligence</button><button data-page="combined">Combined Insight</button><button data-page="model">About Model</button><button data-page="privacy">Privacy</button>
+    <button class="active" data-page="home">Home</button><button data-page="live">Face Analysis</button><button data-page="text">Text Intelligence</button><button data-page="combined">Combined Insight</button><button data-page="analytics">Model Analytics</button><button data-page="model">About Model</button><button data-page="privacy">Privacy</button>
   </nav>
 </header>
 <main>
@@ -293,6 +306,45 @@ footer{border-top:1px solid #ffffff10;color:#7683a4;padding:22px clamp(18px,5vw,
       <div class="model-note"><strong>🔴 Emotion–Text Mismatch Detected</strong><br>The two signals point in different broad directions.</div>
       <div class="model-note"><strong>🟡 Ambiguous / Insufficient Evidence</strong><br>One signal is missing, low-confidence, or not suitable for a direct comparison.</div>
     </article>
+  </div>
+</section>
+
+
+<section id="analytics" class="page">
+  <div class="pagehead"><div><div class="eyebrow">Evaluation · Dataset · Diagnostics</div><h1>Model Analytics</h1><p class="muted">The same evaluation figures and dataset breakdown used in the Streamlit model-analysis dashboard.</p></div></div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Total training texts</div><div class="value">118,452</div><div class="sub">Balanced final dataset</div></div>
+    <div class="kpi"><div class="label">Per-class count</div><div class="value">39,484</div><div class="sub">Negative · Neutral · Positive</div></div>
+    <div class="kpi"><div class="label">Internal accuracy</div><div class="value">73.39%</div><div class="sub">Held-out test split</div></div>
+    <div class="kpi"><div class="label">Internal Macro F1</div><div class="value">0.7332</div><div class="sub">Three-class evaluation</div></div>
+    <div class="kpi"><div class="label">External accuracy</div><div class="value">58.05%</div><div class="sub">Untouched TweetEval</div></div>
+  </div>
+  <div class="analytics-grid">
+    <article class="card"><div class="section-top"><div><h2>📚 Dataset source distribution</h2><p>Rows in the final balanced 118,452-text dataset.</p></div><span class="mini-tag">6 SOURCES</span></div><div class="source-list">
+      <div class="source-row"><span class="source-name">SST3_DynaSent</span><div class="source-track"><div class="source-fill" style="width:100%"></div></div><span class="source-num">36,645</span></div>
+      <div class="source-row"><span class="source-name">TweetEval</span><div class="source-track"><div class="source-fill" style="width:73.04%"></div></div><span class="source-num">26,763</span></div>
+      <div class="source-row"><span class="source-name">Amazon</span><div class="source-track"><div class="source-fill" style="width:49%"></div></div><span class="source-num">17,953</span></div>
+      <div class="source-row"><span class="source-name">IMDb</span><div class="source-track"><div class="source-fill" style="width:48.78%"></div></div><span class="source-num">17,877</span></div>
+      <div class="source-row"><span class="source-name">Sentiment140</span><div class="source-track"><div class="source-fill" style="width:48.48%"></div></div><span class="source-num">17,768</span></div>
+      <div class="source-row"><span class="source-name">Restaurant</span><div class="source-track"><div class="source-fill" style="width:3.95%"></div></div><span class="source-num">1,446</span></div>
+    </div><div class="legend-note">Source counts sum to 118,452. All three sentiment classes are balanced at 39,484 texts each.</div></article>
+
+    <article class="card"><div class="section-top"><div><h2>📈 Evaluation comparison</h2><p>Internal held-out evaluation versus strict cross-dataset generalization.</p></div><span class="mini-tag">ACCURACY</span></div><div class="metric-compare">
+      <div class="metric-box"><h3>Internal held-out</h3><div class="big" style="color:#57d9ad">73.39%</div><div class="small">Macro F1 · 0.7332</div><div class="mini-bar"><span style="width:73.39%"></span></div></div>
+      <div class="metric-box"><h3>External TweetEval</h3><div class="big" style="color:#58a6ff">58.05%</div><div class="small">Macro F1 · 0.5581</div><div class="mini-bar"><span style="width:58.05%"></span></div></div>
+    </div><div class="model-note" style="margin-top:14px">The external test is a stricter cross-source generalization check than the internal held-out split.</div></article>
+
+    <article class="card analytics-wide"><div class="section-top"><div><h2>🎯 Class-wise performance</h2><p>Precision, recall and F1 from both evaluations.</p></div><span class="mini-tag">REPORTS</span></div><div class="metric-compare">
+      <div><h3 style="margin:0 0 7px;font-size:13px;color:#e4ebff">Internal held-out</h3><table class="report-table"><thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead><tbody><tr><td class="class-name">Negative</td><td>0.7587</td><td>0.6984</td><td>0.7273</td><td>7,897</td></tr><tr><td class="class-name">Neutral</td><td>0.6845</td><td>0.8221</td><td>0.7470</td><td>7,897</td></tr><tr><td class="class-name">Positive</td><td>0.7753</td><td>0.6811</td><td>0.7252</td><td>7,897</td></tr></tbody></table></div>
+      <div><h3 style="margin:0 0 7px;font-size:13px;color:#e4ebff">External TweetEval</h3><table class="report-table"><thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead><tbody><tr><td class="class-name">Negative</td><td>0.5815</td><td>0.4753</td><td>0.5231</td><td>3,972</td></tr><tr><td class="class-name">Neutral</td><td>0.6082</td><td>0.6761</td><td>0.6403</td><td>5,937</td></tr><tr><td class="class-name">Positive</td><td>0.5043</td><td>0.5175</td><td>0.5108</td><td>2,375</td></tr></tbody></table></div>
+    </div></article>
+
+    <article class="card analytics-wide"><div class="section-top"><div><h2>🧮 Confusion matrices</h2><p>Rows = true labels · columns = predicted labels.</p></div><span class="mini-tag">DIAGNOSTICS</span></div><div class="cm-wrap">
+      <div><p class="cm-title">Internal held-out · 73.39%</p><div class="cm"><div class="head"></div><div class="head">Negative</div><div class="head">Neutral</div><div class="head">Positive</div><div class="head">Negative</div><div class="diag">5,515</div><div class="off">1,434</div><div class="off">948</div><div class="head">Neutral</div><div class="off">794</div><div class="diag">6,492</div><div class="off">611</div><div class="head">Positive</div><div class="off">960</div><div class="off">1,558</div><div class="diag">5,379</div></div></div>
+      <div><p class="cm-title">External TweetEval · 58.05%</p><div class="cm"><div class="head"></div><div class="head">Negative</div><div class="head">Neutral</div><div class="head">Positive</div><div class="head">Negative</div><div class="diag">1,888</div><div class="off">1,716</div><div class="off">368</div><div class="head">Neutral</div><div class="off">1,083</div><div class="diag">4,014</div><div class="off">840</div><div class="head">Positive</div><div class="off">276</div><div class="off">870</div><div class="diag">1,229</div></div></div>
+    </div><div class="legend-note">Diagonal cells are correct predictions; off-diagonal cells show the main confusions.</div></article>
+
+    <article class="card analytics-wide"><div class="section-top"><div><h2>⚙️ Text model configuration</h2><p>Configuration used to produce the browser-side model.</p></div><span class="mini-tag">TF-IDF + LR</span></div><div class="architecture"><div class="arch-step"><strong>Cleaning</strong><span>Lowercase, URL/@ removal</span></div><div class="arch-step"><strong>TF-IDF</strong><span>10,000 features · (1,2)-grams</span></div><div class="arch-step"><strong>Logistic Regression</strong><span>3-class probabilities</span></div><div class="arch-step"><strong>Post-processing</strong><span>Conflict Score + qualitative comparison</span></div></div><div class="bar-chart"><div class="bar-line"><span class="name">Negative F1</span><div class="track"><div class="fill" style="width:72.73%"></div></div><span class="pct">0.7273</span></div><div class="bar-line"><span class="name">Neutral F1</span><div class="track"><div class="fill" style="width:74.70%"></div></div><span class="pct">0.7470</span></div><div class="bar-line"><span class="name">Positive F1</span><div class="track"><div class="fill" style="width:72.52%"></div></div><span class="pct">0.7252</span></div></div><div class="model-note" style="margin-top:13px">Conflict Score is text-only; facial output is deliberately excluded from the numeric score.</div></article>
   </div>
 </section>
 
