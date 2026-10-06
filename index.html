@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#080b16" />
+<title>EmotionAI — Multimodal Sentiment & Emotion Analyzer</title>
+<style>
+:root{--bg:#080b16;--panel:#101629;--panel2:#131b32;--line:#25304d;--text:#eef2ff;--muted:#96a2c2;--purple:#9875ff;--blue:#58a6ff;--green:#57d9ad;--red:#ff6e88;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% -10%,#201747 0,transparent 40%),radial-gradient(ellipse at 90% 10%,#0c2a50 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,select{font:inherit}button{cursor:pointer;border:0}a{color:inherit;text-decoration:none}
+header{height:76px;border-bottom:1px solid #ffffff12;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,72px);position:sticky;top:0;background:#080b16d9;backdrop-filter:blur(16px);z-index:10}
+.brand{display:flex;align-items:center;gap:11px;font-size:18px;font-weight:800;letter-spacing:-.4px}.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--blue));display:grid;place-items:center;color:white;font-weight:900;box-shadow:0 0 28px #9875ff40}
+nav{display:flex;gap:7px}nav button{background:transparent;color:var(--muted);padding:10px 14px;border-radius:10px}nav button.active,nav button:hover{color:white;background:#ffffff0d}
+main{max-width:1440px;margin:auto;padding:32px clamp(16px,4vw,56px) 60px}.page{display:none}.page.active{display:block}
+.eyebrow{color:#b6a3ff;font-size:12px;text-transform:uppercase;letter-spacing:1.8px;font-weight:800}.hero{padding:52px 0 34px;max-width:900px}.hero h1{font-size:clamp(38px,6vw,72px);line-height:1.02;letter-spacing:-2.8px;margin:16px 0}.gradient{background:linear-gradient(100deg,#b9a5ff,#74c5ff);color:transparent;background-clip:text}.hero p{max-width:710px;color:var(--muted);font-size:18px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.btn{border-radius:11px;padding:11px 17px;font-weight:750;transition:.18s}.btn:disabled{opacity:.4;cursor:not-allowed}.primary{background:linear-gradient(110deg,#8967ef,#4f8fe8);color:white;box-shadow:0 8px 26px #7054db30}.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}.secondary{background:#ffffff0b;border:1px solid var(--line);color:var(--text)}.danger{background:#5a2235;color:#ffdce3;border:1px solid #85384f}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0 30px}.feature,.card{background:linear-gradient(145deg,#11182b,#0e1425);border:1px solid #ffffff12;border-radius:var(--radius);padding:20px}.feature .icon{font-size:24px}.feature h3{margin:12px 0 6px;font-size:16px}.feature p,.muted{color:var(--muted);margin:0;font-size:13px}.disclaimer{border:1px solid #8b72df45;background:#8b72df0b;border-radius:13px;padding:15px 18px;color:#c7cce0;font-size:13px}
+.pagehead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 24px}.pagehead h1{font-size:clamp(28px,4vw,42px);margin:7px 0;letter-spacing:-1.4px}.livegrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px}.cardhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.cardhead h2{font-size:16px;margin:0}.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;background:#64708c;display:inline-block}.dot.green{background:var(--green);box-shadow:0 0 12px #57d9ad70}.video-wrap{position:relative;aspect-ratio:16/10;background:#050812;border:1px solid #ffffff12;border-radius:14px;overflow:hidden;display:grid;place-items:center}.video-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}.video-wrap video.on{display:block}.camera-placeholder{text-align:center;padding:22px;color:var(--muted)}.camera-placeholder .camicon{font-size:42px;margin-bottom:10px}.overlay{position:absolute;left:12px;top:12px;background:#080b16c9;border:1px solid #ffffff1b;padding:6px 10px;border-radius:99px;font-size:11px;color:#d7dcf1}
+.controls{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.controls .btn{padding:9px 13px;font-size:13px}.select{background:#0c1223;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px 10px;max-width:100%}.camera-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}.camera-row label{font-size:12px;color:var(--muted)}
+.expr-card{display:flex;align-items:center;gap:18px;padding:20px;border-radius:15px;background:linear-gradient(130deg,#6f4fc51d,#3387d31a);border:1px solid #9e87ff30}.face-emoji{font-size:43px}.expr-label{font-size:28px;font-weight:800;letter-spacing:-.8px}.confidence{color:#b4c1dd;font-size:13px}.confidence strong{color:#fff}.pill{font-size:11px;padding:5px 9px;border-radius:99px;background:#ffffff0b;color:#aebbd6;border:1px solid #ffffff12}
+.prob-list{display:grid;gap:11px;margin-top:18px}.prob-row{display:grid;grid-template-columns:90px 1fr 48px;gap:10px;align-items:center;font-size:12px}.bar{height:8px;background:#252e48;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:99px;transition:width .25s}.prob-val{text-align:right;color:#c6d0e8;font-variant-numeric:tabular-nums}
+.bottomgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:18px}.chartbox{height:220px;position:relative}.chartbox svg{width:100%;height:100%;overflow:visible}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.stat{padding:17px;background:#0c1222;border:1px solid #ffffff0e;border-radius:14px}.stat label{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:25px;letter-spacing:-.8px;margin-top:8px}.stat small{color:#9eacd0;font-size:11px}
+.tablewrap{overflow:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:430px}th,td{text-align:left;padding:12px;border-bottom:1px solid #ffffff0c;font-size:13px}th{color:var(--muted);font-weight:600}td{color:#d9e1f5}.empty{text-align:center;color:var(--muted);padding:28px}
+.contentgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.contentgrid .card h2{margin:0 0 10px;font-size:18px}.contentgrid p,.contentgrid li{color:var(--muted);font-size:14px}.contentgrid ul{padding-left:19px}.tag{display:inline-block;font-size:11px;border:1px solid #ffffff17;color:#c9d3eb;padding:5px 9px;border-radius:99px;margin:4px 4px 0 0}
+footer{border-top:1px solid #ffffff10;color:#7683a4;padding:22px clamp(18px,5vw,72px);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#202a43;border:1px solid #ffffff25;padding:12px 17px;border-radius:12px;z-index:30;display:none;max-width:90vw;font-size:13px}.toast.show{display:block}
+@media(max-width:1000px){.features{grid-template-columns:repeat(2,1fr)}.livegrid{grid-template-columns:1fr}.bottomgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){header{height:auto;min-height:68px;padding:12px 16px;align-items:flex-start;gap:10px;flex-direction:column}nav{width:100%;overflow:auto}nav button{white-space:nowrap;padding:8px 11px;font-size:12px}.hero{padding:34px 0 24px}.hero h1{letter-spacing:-1.6px}.hero p{font-size:16px}.features{grid-template-columns:1fr 1fr}.feature{padding:15px}.pagehead{align-items:flex-start;flex-direction:column}.contentgrid{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:21px}.prob-row{grid-template-columns:78px 1fr 42px}.card{padding:15px}main{padding-top:22px}}
+
+  /* ---------- Multimodal additions ---------- */
+  .feature-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:17px; }
+  .feature-pill { font-size:11px; font-weight:800; color:#31565b; background:rgba(255,255,255,.78); border:1px solid var(--line); border-radius:999px; padding:8px 11px; }
+  .multimodal-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr); gap:20px; margin-top:20px; align-items:start; }
+  .text-card, .combined-card { padding:22px; }
+  .section-top { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:18px; }
+  .section-top h2 { margin:0; font-size:17px; letter-spacing:-.3px; }
+  .section-top p { margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.55; }
+  .mini-tag { white-space:nowrap; color:#075c67; background:#e4f6f2; border:1px solid #d6eee9; border-radius:999px; padding:7px 10px; font-size:10px; font-weight:850; letter-spacing:.4px; }
+  textarea { width:100%; min-height:132px; resize:vertical; border:1px solid var(--line); border-radius:16px; background:#fbfdfc; padding:15px; color:var(--ink); font:inherit; font-size:13px; line-height:1.6; outline:none; transition:border-color .15s, box-shadow .15s; }
+  textarea:focus { border-color:#77c7c5; box-shadow:0 0 0 4px rgba(8,127,140,.08); }
+  .text-tools { display:flex; justify-content:space-between; gap:10px; margin-top:12px; align-items:center; flex-wrap:wrap; }
+  .example-row { display:flex; gap:7px; flex-wrap:wrap; }
+  .chip { border:1px solid var(--line); background:#f5faf8; color:#49676c; padding:8px 10px; border-radius:999px; font-size:10px; font-weight:800; box-shadow:none; }
+  .action-row { display:flex; gap:8px; }
+  .text-result { display:none; margin-top:19px; border-top:1px solid var(--line); padding-top:18px; }
+  .sentiment-summary { display:grid; grid-template-columns:auto 1fr auto; gap:13px; align-items:center; padding:16px; border-radius:17px; background:linear-gradient(135deg,#f0faf7,#f9fcfb); border:1px solid #dceee9; }
+  .sentiment-summary .big-emoji { width:52px; height:52px; border-radius:16px; display:grid; place-items:center; font-size:28px; background:#fff; box-shadow:0 5px 14px rgba(20,80,70,.06); }
+  .sentiment-name { font-size:22px; font-weight:850; letter-spacing:-.6px; }
+  .sentiment-sub { color:var(--muted); font-size:11px; margin-top:3px; }
+  .confidence-badge { text-align:right; }
+  .confidence-badge strong { display:block; font-size:20px; }
+  .confidence-badge span { color:var(--muted); font-size:10px; }
+  .prob-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+  .prob-bars { display:flex; flex-direction:column; gap:12px; }
+  .prob-row { display:grid; grid-template-columns:72px 1fr 42px; gap:9px; align-items:center; }
+  .prob-name { font-size:11px; font-weight:800; color:#526b70; }
+  .prob-track { height:9px; background:#edf2f1; border-radius:999px; overflow:hidden; }
+  .prob-fill { height:100%; width:0; border-radius:999px; transition:width .35s ease; }
+  .prob-pct { text-align:right; font-size:10px; font-weight:850; color:#71818d; }
+  .conflict-box { border:1px solid var(--line); border-radius:16px; padding:14px; background:#fbfcfc; }
+  .conflict-line { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .conflict-score { font-size:24px; font-weight:850; letter-spacing:-.6px; }
+  .conflict-level { color:var(--muted); font-size:10px; margin-top:2px; }
+  .conflict-track { height:10px; border-radius:999px; background:#edf2f1; overflow:hidden; margin-top:12px; }
+  .conflict-fill { height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,#55c7b2,#f3b84b,#ff8a68); transition:width .35s ease; }
+  .clause-list { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .clause-item { display:grid; grid-template-columns:1fr auto; gap:10px; padding:10px 11px; border-radius:12px; background:#f7faf9; border:1px solid #e8efed; }
+  .clause-text { font-size:11px; line-height:1.45; color:#466166; }
+  .clause-meta { font-size:10px; font-weight:850; white-space:nowrap; }
+  .combined-status { text-align:center; padding:18px; border-radius:17px; background:#f8fbfa; border:1px solid var(--line); }
+  .combined-icon { font-size:34px; }
+  .combined-title { font-size:18px; font-weight:850; margin-top:6px; }
+  .combined-copy { color:var(--muted); font-size:11px; line-height:1.55; margin-top:5px; }
+  .signal-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:13px; }
+  .signal-card { border:1px solid var(--line); background:#fbfdfc; border-radius:14px; padding:12px; }
+  .signal-label { color:var(--muted); font-size:9px; font-weight:850; letter-spacing:.7px; text-transform:uppercase; }
+  .signal-value { margin-top:5px; font-size:15px; font-weight:850; }
+  .signal-confidence { color:var(--muted); font-size:10px; margin-top:2px; }
+  .model-note { margin-top:14px; padding:11px 12px; border-radius:12px; background:#f5faf8; color:#688087; font-size:10px; line-height:1.55; }
+  .loading-inline { color:#7b6b3e; background:#fff7df; border:1px solid #f6e7b5; border-radius:12px; padding:10px 12px; margin-top:12px; font-size:11px; display:none; }
+  @media(max-width:900px) {
+    .multimodal-grid { grid-template-columns:1fr; }
+  }
+  @media(max-width:560px) {
+    .prob-grid, .signal-grid { grid-template-columns:1fr; }
+    .sentiment-summary { grid-template-columns:auto 1fr; }
+    .confidence-badge { grid-column:1 / -1; text-align:left; padding-left:65px; margin-top:-10px; }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#" data-page="home"><span class="logo">E</span> EmotionAI</a>
+  <nav aria-label="Main navigation">
+    <button class="active" data-page="home">Home</button><button data-page="live">Face Analysis</button><button data-page="text">Text Intelligence</button><button data-page="combined">Combined Insight</button><button data-page="model">About Model</button><button data-page="privacy">Privacy</button>
+  </nav>
+</header>
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="eyebrow">Multimodal ML · Browser-based analysis</div>
+    <h1>Understand the text.<br><span class="gradient">See the expression.</span></h1>
+    <p>Analyze trained 3-class text sentiment, detect clause-level sentiment conflict, and compare the result with visible facial-expression estimates—entirely in the browser.</p>
+    <div class="actions"><button class="btn primary" data-page="live">Start Face Analysis ↗</button><button class="btn secondary" data-page="text">Analyze Text</button><button class="btn secondary" data-page="model">Explore the model</button></div>
+  </div>
+  <div class="features">
+<div class="feature-pills">
+  <span class="feature-pill">📝 3-class text sentiment</span>
+  <span class="feature-pill">🔀 Clause-Level Conflict Score</span>
+  <span class="feature-pill">🔗 Text–Face comparison</span>
+</div>
+    <article class="feature"><div class="icon">◉</div><h3>Live camera</h3><p>Start, pause, resume, switch, or stop your camera at any time.</p></article>
+    <article class="feature"><div class="icon">⌁</div><h3>Real model inference</h3><p>Facial-expression scores come from a pretrained neural network—not generated sample values.</p></article>
+    <article class="feature"><div class="icon">▥</div><h3>Session analytics</h3><p>Review actual predictions, confidence scores, history, and export a CSV.</p></article>
+    <article class="feature"><div class="icon">♧</div><h3>Privacy-first design</h3><p>Camera frames are processed in your browser. No recording or audio capture.</p></article>
+  </div>
+  <div class="disclaimer"><strong>Important:</strong> Facial expressions cannot reliably reveal someone's internal emotions, intent, personality, or truth. This project is for learning and experimentation, not diagnosis or decisions about people.</div>
+</section>
+
+<section id="live" class="page">
+  <div class="pagehead"><div><div class="eyebrow">Live workspace</div><h1>Expression analysis</h1><p class="muted">Camera frames are processed locally in this browser. Start the camera to begin.</p></div><span class="pill" id="modelBadge">Model: Not loaded</span></div>
+  <div class="livegrid">
+    <article class="card">
+      <div class="cardhead"><h2>Camera feed</h2><span class="status"><i class="dot" id="cameraDot"></i><span id="cameraStatus">Camera off</span></span></div>
+      <div class="video-wrap"><video id="video" autoplay muted playsinline></video><div class="camera-placeholder" id="placeholder"><div class="camicon">▣</div><strong>Camera is off</strong><p class="muted">Start camera to begin local analysis.</p></div><div class="overlay" id="faceBadge">Waiting for camera</div></div>
+      <div class="camera-row"><label for="cameraSelect">Camera</label><select id="cameraSelect" class="select"><option value="">Default camera</option></select></div>
+      <div class="controls">
+        <button class="btn primary" id="startBtn">Start Camera</button>
+        <button class="btn secondary" id="pauseBtn" disabled>Pause Analysis</button>
+        <button class="btn secondary" id="resumeBtn" disabled>Resume</button>
+        <button class="btn danger" id="stopBtn" disabled>Stop Camera</button>
+      </div>
+      <div class="muted" id="errorMsg" role="status" style="margin-top:13px"></div>
+    </article>
+    <article class="card">
+      <div class="cardhead"><h2>Current model prediction</h2><span class="pill">MODEL OUTPUT</span></div>
+      <div class="expr-card"><div class="face-emoji" id="exprEmoji">◌</div><div><div class="expr-label" id="exprLabel">—</div><div class="confidence" id="confidence">Waiting for a face</div></div></div>
+      <div class="cardhead" style="margin:22px 0 0"><h2>Class probabilities</h2><span class="muted">Model scores</span></div>
+      <div class="prob-list" id="probList"></div>
+    </article>
+  </div>
+  <div class="bottomgrid">
+    <article class="card"><div class="cardhead"><h2>Prediction timeline</h2><span class="muted">Actual inference events</span></div><div class="chartbox" id="timeline"><div class="empty">Timeline will appear after a valid prediction.</div></div></article>
+    <article class="card"><div class="cardhead"><h2>Prediction distribution</h2><span class="muted">Session share</span></div><div class="chartbox" id="distribution"><div class="empty">No predictions yet.</div></div></article>
+  </div>
+  <div class="stats">
+    <div class="stat"><label>Analysis duration</label><strong id="duration">00:00</strong><small>Current session</small></div>
+    <div class="stat"><label>Face detections</label><strong id="detections">0</strong><small>Successful single-face checks</small></div>
+    <div class="stat"><label>Most frequent</label><strong id="mostCommon">—</strong><small>Based on model outputs</small></div>
+    <div class="stat"><label>Inference rate</label><strong id="fps">—</strong><small>Approx. predictions / second</small></div>
+  </div>
+  <article class="card" style="margin-top:18px">
+    <div class="cardhead"><div><h2>Expression history</h2><p class="muted">Actual prediction events from this session</p></div><div class="actions" style="margin:0"><button class="btn secondary" id="csvBtn">Export CSV</button><button class="btn secondary" id="resetBtn">Reset session</button></div></div>
+    <div class="tablewrap"><table><thead><tr><th>Time</th><th>Predicted expression</th><th>Confidence</th></tr></thead><tbody id="history"><tr><td class="empty" colspan="3">No predictions yet.</td></tr></tbody></table></div>
+  </article>
+  <p class="muted" style="margin-top:16px">Predictions are model classifications of visible facial patterns and are not a reliable measure of actual emotional state.</p>
+</section>
+
+
+<section id="text" class="page">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">Natural language · Browser-based ML</div>
+      <h1>Text Intelligence</h1>
+      <p class="muted">Your trained 3-class sentiment model runs locally in the browser using the exported model parameters.</p>
+    </div>
+    <span class="pill" id="textModelBadge">Text model: Loading…</span>
+  </div>
+
+  <div class="multimodal-grid">
+    <article class="card text-card">
+      <div class="section-top">
+        <div>
+          <h2>📝 Analyze any text</h2>
+          <p>Positive · Neutral · Negative with model probabilities and clause-level conflict analysis.</p>
+        </div>
+        <span class="mini-tag">TF-IDF + LOGISTIC REGRESSION</span>
+      </div>
+
+      <textarea id="textInput" placeholder="Example: The food was excellent but the service was extremely slow."></textarea>
+
+      <div class="text-tools">
+        <div class="example-row">
+          <button class="chip" data-example="The phone is absolutely amazing.">😊 Positive</button>
+          <button class="chip" data-example="The meeting starts tomorrow at 10 AM.">😐 Neutral</button>
+          <button class="chip" data-example="The service was terrible and the staff were rude.">😞 Negative</button>
+          <button class="chip" data-example="The food was excellent but the service was extremely slow.">🔀 Mixed</button>
+        </div>
+        <div class="action-row">
+          <button class="btn secondary" id="clearTextBtn">Clear</button>
+          <button class="btn primary" id="analyzeTextBtn">✨ Analyze Text</button>
+        </div>
+      </div>
+
+      <div class="loading-inline" id="textLoading">Loading your trained text model…</div>
+
+      <div class="text-result" id="textResult">
+        <div class="sentiment-summary">
+          <div class="big-emoji" id="textEmoji">🧠</div>
+          <div>
+            <div class="sentiment-name" id="textSentiment">—</div>
+            <div class="sentiment-sub">Overall text sentiment</div>
+          </div>
+          <div class="confidence-badge"><strong id="textConfidence">—</strong><span>model confidence</span></div>
+        </div>
+
+        <div class="prob-grid">
+          <div>
+            <div class="section-label"><span>Class probabilities</span><span>3-class output</span></div>
+            <div class="prob-bars" id="textProbBars"></div>
+          </div>
+          <div>
+            <div class="section-label"><span>Clause-Level Conflict Score</span><span>TEXT ONLY</span></div>
+            <div class="conflict-box">
+              <div class="conflict-line"><div><div class="conflict-score" id="conflictScore">N/A</div><div class="conflict-level" id="conflictLevel">Not Applicable</div></div><div style="font-size:26px">🔀</div></div>
+              <div class="conflict-track"><div class="conflict-fill" id="conflictFill"></div></div>
+              <div class="model-note" id="conflictNote">A single meaningful clause does not produce a conflict score.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <div class="section-label"><span>Clause breakdown</span><span>Independent predictions</span></div>
+          <div class="clause-list" id="clauseList"></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card combined-card">
+      <div class="section-top">
+        <div><h2>📊 Model details</h2><p>Browser-side inference using your exported scikit-learn model.</p></div>
+      </div>
+      <div class="signal-card"><div class="signal-label">Classes</div><div class="signal-value">Positive · Neutral · Negative</div><div class="signal-confidence">3-class classification</div></div>
+      <div class="signal-card" style="margin-top:10px"><div class="signal-label">Features</div><div class="signal-value">10,000</div><div class="signal-confidence">Unigrams + bigrams</div></div>
+      <div class="signal-card" style="margin-top:10px"><div class="signal-label">Training dataset</div><div class="signal-value">118,452 texts</div><div class="signal-confidence">Balanced 3-class dataset</div></div>
+      <div class="model-note" style="margin-top:14px">Internal held-out accuracy: <strong>73.39%</strong> · Macro F1: <strong>0.7332</strong><br>External TweetEval accuracy: <strong>58.05%</strong> · Macro F1: <strong>0.5581</strong></div>
+      <div class="model-note">The numeric Conflict Score belongs only to text. It does not include facial output.</div>
+    </article>
+  </div>
+</section>
+
+<section id="combined" class="page">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">Multimodal interpretation</div>
+      <h1>Combined Insight</h1>
+      <p class="muted">Text sentiment and facial expression remain separate signals. This layer only compares them qualitatively.</p>
+    </div>
+  </div>
+
+  <div class="multimodal-grid">
+    <article class="card combined-card">
+      <div class="combined-status" id="combinedStatus">
+        <div class="combined-icon">🔗</div>
+        <div class="combined-title">Waiting for both signals</div>
+        <div class="combined-copy">Analyze text and start the camera to compare the two independent outputs.</div>
+      </div>
+      <div class="signal-grid">
+        <div class="signal-card"><div class="signal-label">Text sentiment</div><div class="signal-value" id="combinedText">—</div><div class="signal-confidence" id="combinedTextConf">No text result</div></div>
+        <div class="signal-card"><div class="signal-label">Face expression</div><div class="signal-value" id="combinedFace">—</div><div class="signal-confidence" id="combinedFaceConf">No face result</div></div>
+      </div>
+    </article>
+
+    <article class="card combined-card">
+      <div class="section-top"><div><h2>How to read this</h2><p>No combined numeric conflict score is used.</p></div><span class="mini-tag">QUALITATIVE</span></div>
+      <div class="model-note"><strong>🟢 Consistent</strong><br>The visible facial expression and text polarity point in the same broad direction.</div>
+      <div class="model-note"><strong>🔴 Emotion–Text Mismatch Detected</strong><br>The two signals point in different broad directions.</div>
+      <div class="model-note"><strong>🟡 Ambiguous / Insufficient Evidence</strong><br>One signal is missing, low-confidence, or not suitable for a direct comparison.</div>
+    </article>
+  </div>
+</section>
+
+<section id="model" class="page">
+  <div class="pagehead"><div><div class="eyebrow">Technical notes</div><h1>About the model</h1><p class="muted">What runs, what it outputs, and where it can fail.</p></div></div>
+  <div class="contentgrid">
+    <article class="card"><h2>Model used</h2><p>This app uses <strong>face-api.js</strong> with its Tiny Face Detector and Face Expression Recognition neural network. The library provides seven expression classes: happy, sad, angry, fearful, disgusted, surprised, and neutral.</p><p>Model weights are loaded from the face-api.js project's public weights directory. The app reports a model-loading error if those files cannot be reached. No prediction is generated when the model is unavailable.</p><p><span class="tag">TensorFlow.js</span><span class="tag">Tiny Face Detector</span><span class="tag">7 expression labels</span><span class="tag">Browser inference</span></p></article>
+    <article class="card"><h2>Inference pipeline</h2><ul><li>Request camera permission and display the live video.</li><li>Run face detection on a throttled interval.</li><li>Only continue when exactly one face is detected.</li><li>Run the expression model and read its seven output scores.</li><li>Update charts and history using actual results.</li></ul></article>
+    <article class="card"><h2>Dataset and training</h2><p>This app uses pretrained public model weights. The app does not train a model in your browser and does not independently verify the original training dataset or its evaluation metrics. FER-2013 is a commonly used facial-expression research dataset, but this app does not claim its deployed weights were trained or tested on FER-2013.</p></article>
+    <article class="card"><h2>Limitations</h2><ul><li>Lighting, camera quality, face angle, and occlusion can affect outputs.</li><li>Model performance can vary across people and settings.</li><li>Facial expressions are ambiguous and context-dependent.</li><li>A probability score is not a calibrated measure of emotional certainty.</li><li>Do not use results for diagnosis, hiring, discipline, surveillance, or decisions about a person.</li></ul></article>
+  </div>
+</section>
+
+<section id="privacy" class="page">
+  <div class="pagehead"><div><div class="eyebrow">Your data</div><h1>Privacy by design</h1><p class="muted">You control camera access and can stop it whenever you want.</p></div></div>
+  <div class="contentgrid">
+    <article class="card"><h2>Camera permission</h2><p>Your browser asks for permission before the camera starts. You can revoke permission in your browser settings. Camera access requires a secure context such as HTTPS or localhost.</p></article>
+    <article class="card"><h2>Local processing</h2><p>Video frames are sent to the in-browser face detector and expression model. This page does not upload camera frames to an application server, record video, or capture audio. Model library and weight files are fetched from a public CDN/repository when needed.</p></article>
+    <article class="card"><h2>Session history</h2><p>Prediction history and session statistics are kept in page memory while the page is open. They are not sent to a database. Use Export CSV if you choose to save your session, or Reset session to clear the in-page results.</p></article>
+    <article class="card"><h2>Stop anytime</h2><p>Select <strong>Stop Camera</strong> to stop the camera tracks and end analysis. Closing or refreshing the page also ends the camera session. The browser's camera indicator helps show when the camera is active.</p><button class="btn secondary" data-page="live" style="margin-top:8px">Go to Live Analysis</button></article>
+  </div>
+</section>
+</main>
+<footer><span>© EmotionAI · Learning project</span><span>Facial expression predictions ≠ actual emotions.</span></footer>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let textModel = null;
+  let latestText = null;
+  let latestFace = null;
+
+  const TEXT_META = {
+    positive: {emoji: "😊", color: "#22c55e"},
+    neutral: {emoji: "😐", color: "#8b5cf6"},
+    negative: {emoji: "😞", color: "#ef4444"}
+  };
+
+  function setTextModelBadge(text, ok=false, error=false){
+    const el = $("textModelBadge");
+    if(!el) return;
+    el.textContent = "Text model: " + text;
+    el.style.color = ok ? "#70e2bd" : (error ? "#ff8ba0" : "#b9c3df");
+  }
+
+  function softmax(scores){
+    const m = Math.max(...scores);
+    const exps = scores.map(v => Math.exp(v-m));
+    const sum = exps.reduce((a,b)=>a+b,0) || 1;
+    return exps.map(v=>v/sum);
+  }
+
+  function cleanModelText(text){
+    return String(text ?? "")
+      .toLowerCase()
+      .replace(/<.*?>/g, " ")
+      .replace(/http\S+|www\.\S+/g, " ")
+      .replace(/@\w+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function tokenize(text){
+    const matches = text.match(/[\p{L}\p{N}_]{2,}/gu);
+    return matches || [];
+  }
+
+  function predictText(rawText){
+    if(!textModel) throw new Error("Text model is not loaded yet.");
+    const cleaned = cleanModelText(rawText);
+    const tokens = tokenize(cleaned);
+    const counts = new Map();
+    for(const tok of tokens) counts.set(tok, (counts.get(tok)||0)+1);
+    for(let i=0;i<tokens.length-1;i++){
+      const bg = tokens[i] + " " + tokens[i+1];
+      counts.set(bg, (counts.get(bg)||0)+1);
+    }
+    const x = new Float64Array(textModel.features.length);
+    let norm2 = 0;
+    for(const [feature,count] of counts){
+      const idx = textModel.vocab.get(feature);
+      if(idx === undefined) continue;
+      const tf = 1 + Math.log(count);
+      const value = tf * textModel.idf[idx];
+      x[idx] = value;
+      norm2 += value*value;
+    }
+    const norm = Math.sqrt(norm2) || 1;
+    for(let i=0;i<x.length;i++) x[i] /= norm;
+    const logits = textModel.coef.map((row, ri) => {
+      let s = Number(textModel.intercept[ri] || 0);
+      for(let i=0;i<x.length;i++) s += row[i] * x[i];
+      return s;
+    });
+    const probs = softmax(logits);
+    const probabilityMap = {};
+    textModel.classes.forEach((c,i)=> probabilityMap[c]=probs[i]);
+    let best = 0;
+    for(let i=1;i<probs.length;i++) if(probs[i]>probs[best]) best=i;
+    return {
+      sentiment: textModel.classes[best],
+      confidence: probs[best],
+      probabilities: probabilityMap,
+      cleaned
+    };
+  }
+
+  const CONTRAST = ["but","however","although","though","yet","whereas","while","nevertheless"];
+  const CONTRAST_RE = new RegExp("\\\\s+("+CONTRAST.join("|")+" )\\\\s+","i");
+  function splitClauses(text){
+    let marked = String(text||"").replace(/\s+(but|however|although|though|yet|whereas|while|nevertheless)\s+/gi, " ||| $1 ");
+    marked = marked.replace(/[;.!?]+/g, " ||| ");
+    return marked.split("|||").map(s=>s.trim().replace(/^[,;: ]+|[,;: ]+$/g, "")).filter(s=>s.split(/\s+/).filter(Boolean).length>=2);
+  }
+  function removeConnector(clause){
+    return String(clause||"").replace(/^(but|however|although|though|yet|whereas|while|nevertheless)\b[:,]?\s*/i, "").trim();
+  }
+  function beginsContrast(clause){ return /^(but|however|although|though|yet|whereas|while|nevertheless)\b/i.test(clause.trim()); }
+  function conflictLevel(score){
+    if(score===null) return "Not Applicable";
+    if(score<=19) return "Little / No Conflict";
+    if(score<=49) return "Mild Mixed Sentiment";
+    if(score<=74) return "Moderate Conflict";
+    return "Strong Conflict";
+  }
+  function calculateConflict(text){
+    const raws = splitClauses(text);
+    if(raws.length<2) return {score:null, level:"Not Applicable", clauses:[]};
+    const clauses = raws.map((raw, i) => {
+      const modelText = removeConnector(raw);
+      const p = predictText(modelText);
+      return {number:i+1, text:raw, modelText, ...p};
+    });
+    let best=0, bestPair=null;
+    for(let i=0;i<clauses.length;i++) for(let j=i+1;j<clauses.length;j++){
+      const a=clauses[i], b=clauses[j];
+      const va = a.sentiment==="negative" ? -1 : a.sentiment==="positive" ? 1 : 0;
+      const vb = b.sentiment==="negative" ? -1 : b.sentiment==="positive" ? 1 : 0;
+      const distance = Math.abs(va-vb)/2;
+      const minConf = Math.min(a.confidence,b.confidence);
+      const explicit = j===i+1 && beginsContrast(raws[j]);
+      const pair = Math.min(1, distance*minConf*(explicit?1.15:1.0));
+      if(pair>best){ best=pair; bestPair={a,b,explicit}; }
+    }
+    const score = Math.round(best*100);
+    return {score, level:conflictLevel(score), clauses, bestPair};
+  }
+
+  function renderTextProbabilities(probabilities){
+    const order=["positive","neutral","negative"];
+    const colors={positive:"#22c55e",neutral:"#8b5cf6",negative:"#ef4444"};
+    $("textProbBars").innerHTML=order.map(k=>{
+      const p=(probabilities[k]||0)*100;
+      return `<div class="prob-row"><div class="prob-name">${k[0].toUpperCase()+k.slice(1)}</div><div class="prob-track"><div class="prob-fill" style="width:${p.toFixed(1)}%;background:${colors[k]}"></div></div><div class="prob-pct">${p.toFixed(1)}%</div></div>`;
+    }).join("");
+  }
+
+  function renderConflict(conflict){
+    const score=conflict.score;
+    $("conflictScore").textContent = score===null ? "N/A" : `${score}/100`;
+    $("conflictLevel").textContent = conflict.level;
+    $("conflictFill").style.width = score===null ? "0%" : `${score}%`;
+    $("conflictNote").textContent = score===null
+      ? "A single meaningful clause does not produce a conflict score."
+      : "This score measures disagreement between textual clauses only. Facial output is not included.";
+    if(!conflict.clauses.length){ $("clauseList").innerHTML='<div class="model-note">No multi-clause breakdown available.</div>'; return; }
+    $("clauseList").innerHTML=conflict.clauses.map(c=>{
+      const meta=TEXT_META[c.sentiment];
+      return `<div class="clause-item"><div class="clause-text">${escapeHtml(c.text)}</div><div class="clause-meta" style="color:${meta.color}">${meta.emoji} ${c.sentiment} · ${(c.confidence*100).toFixed(1)}%</div></div>`;
+    }).join("");
+  }
+
+  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
+
+  function renderTextResult(result){
+    const meta=TEXT_META[result.sentiment];
+    $("textResult").style.display="block";
+    $("textEmoji").textContent=meta.emoji;
+    $("textSentiment").textContent=result.sentiment.toUpperCase();
+    $("textSentiment").style.color=meta.color;
+    $("textConfidence").textContent=(result.confidence*100).toFixed(1)+"%";
+    renderTextProbabilities(result.probabilities);
+    renderConflict(result.conflict);
+  }
+
+  function updateCombined(){
+    const box=$("combinedStatus"); if(!box) return;
+    if(!latestText || !latestFace){
+      box.innerHTML='<div class="combined-icon">🔗</div><div class="combined-title">Waiting for both signals</div><div class="combined-copy">Analyze text and start the camera to compare the two independent outputs.</div>';
+      $("combinedText").textContent=latestText ? latestText.sentiment.toUpperCase() : "—";
+      $("combinedTextConf").textContent=latestText ? `${(latestText.confidence*100).toFixed(1)}% model confidence` : "No text result";
+      $("combinedFace").textContent=latestFace ? capFace(latestFace.label).toUpperCase() : "—";
+      $("combinedFaceConf").textContent=latestFace ? `${(latestFace.confidence*100).toFixed(1)}% expression score` : "No face result";
+      return;
+    }
+    const t=latestText.sentiment, f=latestFace.label;
+    const tfPositive=t==="positive", tfNegative=t==="negative", tfNeutral=t==="neutral";
+    const facePositive=f==="happy", faceNegative=["sad","angry","fearful","disgusted"].includes(f), faceNeutral=f==="neutral", faceAmbig=f==="surprised";
+    let title="Ambiguous / Insufficient Evidence", icon="🟡", copy="One or both signals are not strong enough for a direct qualitative comparison.";
+    if(!faceAmbig){
+      if((tfPositive&&facePositive)||(tfNegative&&faceNegative)||(tfNeutral&&faceNeutral)){title="Consistent";icon="🟢";copy="The text sentiment and visible facial expression point in the same broad direction.";}
+      else if((tfPositive&&faceNegative)||(tfNegative&&facePositive)){title="Emotion-Text Mismatch Detected";icon="🔴";copy="The text polarity and visible facial expression point in different broad directions.";}
+    }
+    box.innerHTML=`<div class="combined-icon">${icon}</div><div class="combined-title">${title}</div><div class="combined-copy">${copy}</div>`;
+    $("combinedText").textContent=t.toUpperCase();
+    $("combinedTextConf").textContent=`${(latestText.confidence*100).toFixed(1)}% model confidence`;
+    $("combinedFace").textContent=capFace(f).toUpperCase();
+    $("combinedFaceConf").textContent=`${(latestFace.confidence*100).toFixed(1)}% expression score`;
+  }
+  function capFace(s){return String(s||"").charAt(0).toUpperCase()+String(s||"").slice(1);}
+
+  async function loadTextModel(){
+    try{
+      $("textLoading").style.display="block";
+      const res=await fetch("text_model.json",{cache:"no-store"});
+      if(!res.ok) throw new Error(`Could not load text_model.json (${res.status}).`);
+      const raw=await res.json();
+      raw.vocab=new Map(raw.features.map((f,i)=>[f,i]));
+      textModel=raw;
+      setTextModelBadge("Ready",true,false);
+      $("textLoading").style.display="none";
+    }catch(e){
+      setTextModelBadge("Error",false,true);
+      $("textLoading").style.display="block";
+      $("textLoading").textContent=e.message+" Make sure text_model.json is in the same GitHub/Vercel root as index.html.";
+      console.error(e);
+    }
+  }
+
+  document.querySelectorAll("[data-example]").forEach(btn=>btn.addEventListener("click",()=>{$("textInput").value=btn.dataset.example; goText();}));
+  function goText(){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="text"));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page==="text"));}
+  $("analyzeTextBtn")?.addEventListener("click",()=>{
+    const text=$("textInput").value.trim();
+    if(!text){$("textInput").focus();return;}
+    try{
+      const base=predictText(text);
+      const conflict=calculateConflict(text);
+      latestText={...base,conflict,text};
+      renderTextResult(latestText);
+      updateCombined();
+    }catch(e){
+      $("textLoading").style.display="block";
+      $("textLoading").textContent=e.message;
+      console.error(e);
+    }
+  });
+  $("clearTextBtn")?.addEventListener("click",()=>{
+    $("textInput").value="";latestText=null;$("textResult").style.display="none";updateCombined();
+  });
+
+  window.__emotionAIText={
+    loadTextModel,
+    setLatestFace(face){latestFace=face;updateCombined();},
+    getLatestText(){return latestText;}
+  };
+  loadTextModel();
+})();
+</script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const labels = ["happy","sad","angry","surprised","fearful","disgusted","neutral"];
+  const emojis = {happy:"☺",sad:"☹",angry:"😠",surprised:"😮",fearful:"😨",disgusted:"😖",neutral:"😐"};
+  const modelBase = "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights";
+  let stream=null, running=false, paused=false, raf=null, lastInference=0, modelReady=false, startAt=null, elapsedBefore=0, timerId=null, inferenceTimes=[], history=[], detectionCount=0, busy=false, currentCamera="";
+  const navButtons = [...document.querySelectorAll("[data-page]")];
+  function go(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));if(page==="live") drawAll();}
+  navButtons.forEach(b=>b.addEventListener("click",e=>{e.preventDefault();go(b.dataset.page)}));
+  function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500)}
+  function setError(s){$("errorMsg").textContent=s||""}
+  function setModel(status){$("modelBadge").textContent="Model: "+status;$("modelBadge").style.color=status==="Ready"?"#70e2bd":status==="Error"?"#ff8ba0":"#b9c3df"}
+  function buildProb(){ $("probList").innerHTML=labels.map(l=>`<div class="prob-row"><span>${cap(l)}</span><div class="bar"><span id="bar-${l}"></span></div><span class="prob-val" id="val-${l}">—</span></div>`).join(""); }
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  buildProb();
+  function updateProb(obj){labels.forEach(l=>{const v=Number(obj[l]||0);$("bar-"+l).style.width=(v*100).toFixed(1)+"%";$("val-"+l).textContent=(v*100).toFixed(1)+"%"});}
+  function clearCurrent(msg="Waiting for a face"){ $("exprEmoji").textContent="◌";$("exprLabel").textContent="—";$("confidence").textContent=msg;updateProb({});}
+  async function loadModels(){
+    if(modelReady)return true;
+    if(!window.faceapi){setModel("Error");throw new Error("The face-api.js library could not load. Check your internet connection and reload.");}
+    setModel("Loading…");
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(modelBase),
+      faceapi.nets.faceExpressionNet.loadFromUri(modelBase)
+    ]);
+    modelReady=true;setModel("Ready");return true;
+  }
+  async function refreshCameras(){
+    if(!navigator.mediaDevices?.enumerateDevices)return;
+    const devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput");
+    const sel=$("cameraSelect"), old=sel.value;
+    sel.innerHTML='<option value="">Default camera</option>';
+    devices.forEach((d,i)=>{const o=document.createElement("option");o.value=d.deviceId;o.textContent=d.label||`Camera ${i+1}`;sel.appendChild(o)});
+    if(devices.some(d=>d.deviceId===old))sel.value=old;
+  }
+  async function startCamera(){
+    setError("");
+    if(!navigator.mediaDevices?.getUserMedia){setError("Camera access is not supported here. Open this page in a modern browser over HTTPS or localhost.");return}
+    $("startBtn").disabled=true;
+    try{
+      await loadModels();
+      const deviceId=$("cameraSelect").value;
+      const constraints={audio:false,video:deviceId?{deviceId:{exact:deviceId},width:{ideal:960},height:{ideal:600}}:{facingMode:"user",width:{ideal:960},height:{ideal:600}}};
+      stream=await navigator.mediaDevices.getUserMedia(constraints);
+      $("video").srcObject=stream;await $("video").play();
+      $("video").classList.add("on");$("placeholder").style.display="none";
+      running=true;paused=false;startAt=Date.now();currentCamera=deviceId;
+      $("cameraStatus").textContent="Camera active";$("cameraDot").classList.add("green");
+      $("faceBadge").textContent="Searching for face…";
+      $("startBtn").disabled=true;$("pauseBtn").disabled=false;$("resumeBtn").disabled=true;$("stopBtn").disabled=false;
+      await refreshCameras();if(deviceId)$("cameraSelect").value=deviceId;
+      startTimer();loop();toast("Camera started. Keep one face visible in frame.");
+    }catch(e){
+      const name=e?.name||"";
+      if(name==="NotAllowedError"||name==="PermissionDeniedError")setError("Camera permission was denied. Allow camera access in your browser settings, then try again.");
+      else if(name==="NotFoundError"||name==="DevicesNotFoundError")setError("No camera was found. Connect a camera and try again.");
+      else if(name==="NotReadableError")setError("The camera is busy in another app. Close other camera apps and try again.");
+      else setError(e?.message||"Could not start camera. Check your browser permissions and try again.");
+      setModel(modelReady?"Ready":"Error");
+    }finally{$("startBtn").disabled=!!stream}
+  }
+  async function switchCamera(){
+    if(!running)return;
+    const wanted=$("cameraSelect").value;
+    if(wanted===currentCamera)return;
+    await stopCamera(false);
+    $("cameraSelect").value=wanted;
+    await startCamera();
+  }
+  function pause(){if(!running||paused)return;paused=true;elapsedBefore+=Date.now()-startAt;startAt=null;if(raf)cancelAnimationFrame(raf);raf=null;$("pauseBtn").disabled=true;$("resumeBtn").disabled=false;$("cameraStatus").textContent="Paused";$("faceBadge").textContent="Analysis paused";updateDuration();if(timerId){clearInterval(timerId);timerId=null}}
+  function resume(){if(!running||!paused)return;paused=false;startAt=Date.now();$("pauseBtn").disabled=false;$("resumeBtn").disabled=true;$("cameraStatus").textContent="Camera active";startTimer();loop()}
+  async function stopCamera(reset=false){
+    running=false;paused=false;if(raf)cancelAnimationFrame(raf);raf=null;if(timerId){clearInterval(timerId);timerId=null}
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+    $("video").srcObject=null;$("video").classList.remove("on");$("placeholder").style.display="grid";
+    $("cameraStatus").textContent="Camera off";$("cameraDot").classList.remove("green");$("faceBadge").textContent="Camera stopped";
+    $("startBtn").disabled=false;$("pauseBtn").disabled=true;$("resumeBtn").disabled=true;$("stopBtn").disabled=true;
+    startAt=null;elapsedBefore=0;updateDuration();clearCurrent("Camera stopped");
+    if(reset)resetSession();
+  }
+  function startTimer(){if(timerId)clearInterval(timerId);timerId=setInterval(updateDuration,1000);updateDuration()}
+  function updateDuration(){let ms=elapsedBefore+(startAt?Date.now()-startAt:0);const s=Math.floor(ms/1000);$("duration").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+  async function loop(){
+    if(!running||paused||busy)return;
+    raf=requestAnimationFrame(loop);
+    const now=performance.now();if(now-lastInference<550)return;
+    if(!$("video").videoWidth||$("video").readyState<2)return;
+    lastInference=now;busy=true;
+    try{
+      const results=await faceapi.detectAllFaces($("video"),new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.45})).withFaceExpressions();
+      if(!running||paused)return;
+      if(results.length===0){$("faceBadge").textContent="No face detected";clearCurrent("No face detected");}
+      else if(results.length>1){$("faceBadge").textContent=`${results.length} faces detected`;clearCurrent("Multiple faces detected — show one face");}
+      else{
+        const r=results[0];detectionCount++;$("detections").textContent=detectionCount;$("faceBadge").textContent="Face detected";
+        const ex=r.expressions;let top=labels.reduce((a,b)=>ex[a]>=ex[b]?a:b);
+        const conf=Number(ex[top]||0);$("exprEmoji").textContent=emojis[top]||"◉";$("exprLabel").textContent=cap(top);
+        $("confidence").innerHTML=`Model score: <strong>${(conf*100).toFixed(1)}%</strong>${conf<.35?' · Low-confidence prediction':''}`;
+        updateProb(ex);
+        const entry={timestamp:new Date().toISOString(),time:new Date().toLocaleTimeString(),expression:top,confidence:conf,values:{...ex}};
+        history.push(entry);if(history.length>500)history.shift();
+        inferenceTimes.push(performance.now());inferenceTimes=inferenceTimes.filter(t=>performance.now()-t<10000);
+        $("fps").textContent=inferenceTimes.length?((inferenceTimes.length/Math.max(1,(inferenceTimes[inferenceTimes.length-1]-inferenceTimes[0])/1000)).toFixed(1)):"—";
+        renderHistory();drawAll();
+        if(window.__emotionAIText){ window.__emotionAIText.setLatestFace({label:top,confidence:conf,probabilities:{...ex}}); }
+      }
+    }catch(e){setError("Inference error: "+(e?.message||"Could not process this frame."));}
+    finally{busy=false;}
+  }
+  function counts(){const c=Object.fromEntries(labels.map(l=>[l,0]));history.forEach(h=>c[h.expression]++);return c}
+  function renderHistory(){const body=$("history");if(!history.length){body.innerHTML='<tr><td class="empty" colspan="3">No predictions yet.</td></tr>';return}
+    body.innerHTML=history.slice(-40).reverse().map(h=>`<tr><td>${h.time}</td><td>${cap(h.expression)}</td><td>${(h.confidence*100).toFixed(1)}%</td></tr>`).join("");
+    const c=counts();const top=labels.reduce((a,b)=>c[a]>=c[b]?a:b);$("mostCommon").textContent=history.length?cap(top):"—";
+  }
+  function drawAll(){drawTimeline();drawDistribution()}
+  function drawTimeline(){
+    const box=$("timeline");if(!history.length){box.innerHTML='<div class="empty">Timeline will appear after a valid prediction.</div>';return}
+    const data=history.slice(-45), w=700,h=220,pad={l:36,r:12,t:14,b:35}, cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+    const ys=Object.fromEntries(labels.map((l,i)=>[l,pad.t+i*(ch/Math.max(1,labels.length-1))]));
+    const points=data.map((d,i)=>`${pad.l+(data.length===1?cw/2:i*cw/(data.length-1))},${ys[d.expression]}`).join(" ");
+    const grid=labels.map(l=>`<line x1="${pad.l}" y1="${ys[l]}" x2="${w-pad.r}" y2="${ys[l]}" stroke="#27314b" stroke-dasharray="3 5"/><text x="${pad.l-8}" y="${ys[l]+4}" fill="#94a1c1" font-size="11" text-anchor="end">${cap(l)}</text>`).join("");
+    const dots=data.map((d,i)=>`<circle cx="${pad.l+(data.length===1?cw/2:i*cw/(data.length-1))}" cy="${ys[d.expression]}" r="3.5" fill="#a38aff"/>`).join("");
+    box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Timeline of model prediction labels">${grid}<polyline points="${points}" fill="none" stroke="#9875ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}<text x="${pad.l}" y="${h-8}" fill="#94a1c1" font-size="10">${data[0].time||""}</text><text x="${w-pad.r}" y="${h-8}" fill="#94a1c1" font-size="10" text-anchor="end">${data[data.length-1].time||""}</text></svg>`;
+  }
+  function drawDistribution(){
+    const box=$("distribution");if(!history.length){box.innerHTML='<div class="empty">No predictions yet.</div>';return}
+    const c=counts(),total=history.length,w=600,h=220,pad={l:92,r:45,t:12,b:8},row=27,barW=w-pad.l-pad.r;
+    box.innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Distribution of predicted expression labels">${labels.map((l,i)=>{const y=pad.t+i*row, pct=c[l]/total*100;return `<text x="${pad.l-10}" y="${y+14}" fill="#b7c3de" font-size="12" text-anchor="end">${cap(l)}</text><rect x="${pad.l}" y="${y}" width="${barW}" height="11" rx="5" fill="#252e48"/><rect x="${pad.l}" y="${y}" width="${barW*pct/100}" height="11" rx="5" fill="url(#grad)"/><text x="${w-pad.r+8}" y="${y+10}" fill="#d6def2" font-size="11">${pct.toFixed(0)}%</text>`}).join("")}<defs><linearGradient id="grad"><stop stop-color="#9875ff"/><stop offset="1" stop-color="#58a6ff"/></linearGradient></defs></svg>`;
+  }
+  function resetSession(){history=[];detectionCount=0;inferenceTimes=[];$("detections").textContent="0";$("mostCommon").textContent="—";$("fps").textContent="—";$("history").innerHTML='<tr><td class="empty" colspan="3">No predictions yet.</td></tr>';drawAll();clearCurrent();toast("Session statistics cleared.")}
+  function exportCSV(){if(!history.length){toast("No predictions to export yet.");return}
+    const rows=[["timestamp","expression","confidence"],...history.map(h=>[h.timestamp,h.expression,h.confidence])];
+    const csv=rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+    const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="emotionai-session.csv";a.click();URL.revokeObjectURL(url);
+  }
+  $("startBtn").addEventListener("click",startCamera);$("stopBtn").addEventListener("click",()=>stopCamera());$("pauseBtn").addEventListener("click",pause);$("resumeBtn").addEventListener("click",resume);
+  $("cameraSelect").addEventListener("change",switchCamera);$("csvBtn").addEventListener("click",exportCSV);$("resetBtn").addEventListener("click",resetSession);
+  document.addEventListener("visibilitychange",()=>{if(document.hidden&&running&&!paused)pause()});
+  window.addEventListener("pagehide",()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
+  if(navigator.mediaDevices?.addEventListener)navigator.mediaDevices.addEventListener("devicechange",refreshCameras);
+  refreshCameras().catch(()=>{});
+})();
+</script>
+</body>
+</html>
