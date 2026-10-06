@@ -637,9 +637,10 @@ footer{border-top:1px solid #ffffff10;color:#7683a4;padding:22px clamp(18px,5vw,
   function startTimer(){if(timerId)clearInterval(timerId);timerId=setInterval(updateDuration,1000);updateDuration()}
   function updateDuration(){let ms=elapsedBefore+(startAt?Date.now()-startAt:0);const s=Math.floor(ms/1000);$("duration").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
   async function loop(){
-    if(!running||paused||busy)return;
+    if(!running||paused)return;
     raf=requestAnimationFrame(loop);
-    const now=performance.now();if(now-lastInference<550)return;
+    if(busy)return;
+    const now=performance.now();if(now-lastInference<250)return;
     if(!$("video").videoWidth||$("video").readyState<2)return;
     lastInference=now;busy=true;
     try{
